@@ -5,62 +5,69 @@ Databaza
   - id zákazníka (customer_id)
   - meno (first_name)
   - priezvisko (last_name)
-  - pohlavie (sex)
+  - pohlavie 
   - heslo (password)
   - adresa (adress)
   - email (email)
   - dátum narodenia (birth_date)
   - tel. číslo (phone_number)
+
 - Košík (Cart)
   - id košíka (cart_id)
   - id produktu  (product_id)
   - množstvo (quantity)
+  
 - Produkty (Product)
   - názov
   - popis
-  - parametre
-  - príslušenstvo 
+  - parametre(FK)
+  - príslušenstvo (FK)
   - typ produktu
   - cena
-  - stav na sklade
+  - stav na sklade/dostupnosť
   - hodnotenie
   - komentáre
   - obrázky
+  
 - Objednávka (Order)
   - id objednávky (order_id)
+  - id_košíka (FK)
   - dátum vytvorenia (order_date)
   - vásledná suma (total_price)
   - stav objednávky (stock)
+  
 - Platba (Payment)
   - id platby (payment_id)
   - dátum plátby (payment_date)
   - spôsob platby (payment_method)
   - suma (amount)
-- Kategórie produktov (Catefory)
+  
+- Kategórie produktov (Category)
   - id kategórie (category_id)
   - názov kategórie (category_name)
   - popis (description)
+  - rodič (FK)  
+
 - Parametre
   - id produktu
-  - Typ spotrebiča
-  - Značka a výrobca 
-  - Hodnotenie energetického výkonu spotrebiča 
-  - Funkcie a programy 
-  - Rozmery 
-  - Hmotnosť 
-  - Pripojenie a kompatibilita 
-  - Hlučnosť 
-  - Spotreba energie (vody)
-  - Materiál a dizajn
-  - Ovládanie a interakcia
+  - parameter
+  - value
+
+- Príslušenstvo
+  - id produktu
+  - príslušenstvo
+  - hodnota
+  
 - Hodnotenie
   - id produktu
   - id uživateľa
   - hodnotenie
+  
 - Komentár
   - id produktu
   - id uživateľa
   - komentár
+  
 - Obrazky
   - id produktu
   - obrazok
@@ -74,8 +81,6 @@ Funkce (views + templates)
      - stav tovaru
      - podľa dostupnosti
      - podľa hodnotenia
-     - podle herce
-     - podle režiséra
   - zobrazit detail produktu
   - prihlásený uživateľ môže:
      - vytvoriť objednávky
