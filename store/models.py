@@ -45,11 +45,6 @@ class Product(Model):
         return f"{self.name}"
 
 
-class Cart(Model):
-    id_product = IntegerField()
-    quantity = IntegerField()
-
-
 class Customer(Model):
     first_name = CharField(max_length=32, null=False, blank=False)
     last_name = CharField(max_length=32, null=False, blank=False)
@@ -67,8 +62,15 @@ class Customer(Model):
         return f"{self.first_name} {self.last_name}"
 
 
+class Cart(Model):
+    id_product = IntegerField()
+    customer = ForeignKey(Customer, on_delete=DO_NOTHING)
+    quantity = IntegerField()
+
+
 class Order(Model):
     cart = ForeignKey(Cart, on_delete=SET_NULL, null=True)
+    customer = ForeignKey(Customer, on_delete=DO_NOTHING)
     order_date_time = DateTimeField()
     total_price = FloatField()
     order_status = CharField(max_length=64)
@@ -96,6 +98,7 @@ class Comment(Model):
 
 class Image(Model):
     product = ForeignKey(Product, on_delete=DO_NOTHING, null=False, blank=False)
+    category = ForeignKey(Category, on_delete=DO_NOTHING, null=False, blank=False)
     # url = CharField(max_length=128, null=False, blank=False)
     image = ImageField(upload_to='images/', default=None, null=False,
                        blank=False)  # , height_field=None, width_field=None, max_length=500)
