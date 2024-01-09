@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import Model, CharField, TextField, IntegerField, ManyToManyField, FloatField, ForeignKey, \
-    DO_NOTHING, SET_NULL, DateTimeField, DateField, EmailField
+    DO_NOTHING, SET_NULL, DateTimeField, DateField, EmailField, ImageField
 from django.contrib.auth.models import User
 
 
@@ -11,13 +11,22 @@ class Category(Model):
     class Meta:
         verbose_name_plural = "Categories"
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class Parameter(Model):
     name = CharField(max_length=64)
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class Accessory(Model):
     name = CharField(max_length=64)
+
+    def __str__(self):
+        return f"{self.name}"
 
     class Meta:
         verbose_name_plural = "Accessories"
@@ -32,6 +41,9 @@ class Product(Model):
     stock = IntegerField()
     description = TextField(null=True, blank=True)
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class Cart(Model):
     id_product = IntegerField()
@@ -42,9 +54,11 @@ class Customer(Model):
     first_name = CharField(max_length=32, null=False, blank=False)
     last_name = CharField(max_length=32, null=False, blank=False)
     birth_date = DateField(null=True, blank=True)
-    address = TextField() # TODO: AddressField, spýtať sa
+    address = TextField()
     email = EmailField(null=False, blank=False)
     mobile_number = CharField(max_length=16)
+    created = DateTimeField(auto_now_add=True)
+    updated = DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["last_name", "first_name"]
@@ -54,9 +68,9 @@ class Customer(Model):
 
 
 class Order(Model):
-    cart = ForeignKey(Cart, on_delete=DO_NOTHING)  # TODO : on_delete rozmyslieť sa
+    cart = ForeignKey(Cart, on_delete=SET_NULL, null=True)
     order_date_time = DateTimeField()
-    total_price = IntegerField() # TODO: FloatField?
+    total_price = FloatField()
     order_status = CharField(max_length=64)
 
 
@@ -81,5 +95,12 @@ class Comment(Model):
 
 
 class Image(Model):
-    url = CharField(max_length=128, null=False, blank=False)
+    product = ForeignKey(Product, on_delete=DO_NOTHING, null=False, blank=False)
+    # url = CharField(max_length=128, null=False, blank=False)
+    image = ImageField(upload_to='images/', default=None, null=False,
+                       blank=False)  # , height_field=None, width_field=None, max_length=500)
+    description = TextField()
+
+    def __str__(self):
+        return f"{self.product}: {self.description[:50]}"
 
