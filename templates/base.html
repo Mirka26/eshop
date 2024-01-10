@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="sk">
 <head>
@@ -6,13 +8,20 @@
     <link rel="stylesheet" href="{% static 'viewer/styless.css' %}">
 </head>
 <body>
+    <img class="image1" alt="MRF" src="{% static 'store/images/MRF.pnd">
     <header>
 
     </header>
+    <nav class="Container1">
+        <button>Menu</button>
+        <button>Predajne</button>
+        <button>Prihlásenie</button>
+        <button>Košík</button>
+    </nav>
     <script src="{% static 'viewer/script.js' %}"></script>
     <main>
         {% block content %}{% endblock %}
     </main>
-    <footer>Copyright Created by Miroslava Godušová 9.1.2023</footer>
+    <footer>Copyright Created by Miroslava Godušová 9.1.2024</footer>
 </body>
 </html>

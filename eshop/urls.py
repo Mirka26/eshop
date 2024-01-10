@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path
 
 from store.models import *
+from store.views import *
 
 admin.site.register(Category)
 admin.site.register(Parameter)
@@ -34,6 +35,6 @@ admin.site.register(Image)
 urlpatterns = [
     path("admin/", admin.site.urls),
 
-
+    path('', index, name='index'),
 ]
 
