@@ -3,22 +3,28 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'viewer/styless.css' %}">
+     <title>change picture</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'store/styles.css' %}">
+    <script type="text/javascript" src="{% static 'store/script.js' %}"></script>
 </head>
-<body>
-    <img class="image1" alt="MRF" src="{% static 'store/images/MRF.pnd">
-    <header>
-
+<body onload = "startTimer()">
+    <header class="headContainer">
+        <button class="menu"><img class="img-menu" alt="Menu" src="{% static 'store/images/menu.jpg' %}">Menu</button>
+        <a href="{% url 'index' %}" class="headContainer-center"><h1>Vitajte na našej stránke</h1></a>
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Vyhľadávanie">
+            <span class="search-icon" onclick="performSearch()">🔍</span>
+        </div>
+        <img class="img" alt="MainImage" src="{% static 'store/images/MainImage.jpg' %}">
+        <nav class="navContainer1">
+            <button class="login"><img class="img-login" alt="LogIn" src="{% static 'store/images/login.jpg' %}">Log In</button>
+        </nav>
+        <nav class="navContainer1">
+            <button class="cart"><img class="img-cart" alt="Cart" src="{% static 'store/images/cart.png' %}">Košík</button>
+        </nav>
     </header>
-    <nav class="Container1">
-        <button>Menu</button>
-        <button>Predajne</button>
-        <button>Prihlásenie</button>
-        <button>Košík</button>
-    </nav>
-    <script src="{% static 'viewer/script.js' %}"></script>
     <main>
         {% block content %}{% endblock %}
     </main>

@@ -5,23 +5,6 @@ from django.contrib.auth.models import User
 
 
 # Create your models here.
-class Category(Model):
-    name = CharField(max_length=64)
-
-    class Meta:
-        verbose_name_plural = "Categories"
-
-    def __str__(self):
-        return f"{self.name}"
-
-
-class Parameter(Model):
-    name = CharField(max_length=64)
-
-    def __str__(self):
-        return f"{self.name}"
-
-
 class Accessory(Model):
     name = CharField(max_length=64)
 
@@ -35,11 +18,20 @@ class Accessory(Model):
 class Product(Model):
     name = CharField(max_length=32, null=False, blank=False)
     price = FloatField()
-    categories = ManyToManyField(Category, blank=True, related_name="product_category")
-    parameters = ManyToManyField(Parameter, blank=True, related_name="product_parameter")
+    categories = ManyToManyField("Category", blank=True, related_name="product_category")
     accessories = ManyToManyField(Accessory, blank=True, related_name="product_accessory")
     stock = IntegerField()
+    image = ManyToManyField("Image", null=True, blank=True, related_name="product_image")
     description = TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class Parameter(Model):
+    name = CharField(max_length=64)
+    value = CharField(max_length=64)
+    id_product = ForeignKey(Product, on_delete=SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"{self.name}"
@@ -63,7 +55,7 @@ class Customer(Model):
 
 
 class Cart(Model):
-    id_product = IntegerField()
+    id_product = ForeignKey(Product, on_delete=DO_NOTHING)
     customer = ForeignKey(Customer, on_delete=DO_NOTHING)
     quantity = IntegerField()
 
@@ -97,13 +89,23 @@ class Comment(Model):
 
 
 class Image(Model):
-    product = ForeignKey(Product, on_delete=DO_NOTHING, null=False, blank=False)
-    category = ForeignKey(Category, on_delete=DO_NOTHING, null=False, blank=False)
     # url = CharField(max_length=128, null=False, blank=False)
     image = ImageField(upload_to='images/', default=None, null=False,
                        blank=False)  # , height_field=None, width_field=None, max_length=500)
     description = TextField()
 
     def __str__(self):
-        return f"{self.product}: {self.description[:50]}"
+        return f"{self.description[:50]}"
+
+
+class Category(Model):
+    name = CharField(max_length=64)
+    parent_category = ForeignKey("Category", on_delete=SET_NULL, null=True, blank=True)
+    image = ForeignKey(Image, on_delete=SET_NULL, null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "Categories"
+
+    def __str__(self):
+        return f"{self.name}"
 
