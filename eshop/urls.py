@@ -20,6 +20,7 @@ from django.urls import path
 from store.models import *
 from store.views import *
 
+
 admin.site.register(Category)
 admin.site.register(Parameter)
 admin.site.register(Accessory)
@@ -36,6 +37,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
 
     path('', index, name='index'),
+
+    path('products/', product_list, name="product_list"),
     # path('categories/', categories, name='categories')
 ]
 

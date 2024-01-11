@@ -100,7 +100,7 @@ class Image(Model):
 
 class Category(Model):
     name = CharField(max_length=64)
-    parent_category = ForeignKey("Category", on_delete=SET_NULL, null=True, blank=True)
+    parent_category = ForeignKey("Category", on_delete=SET_NULL, null=True, blank=True, related_name="subcategories")
     image = ForeignKey(Image, on_delete=SET_NULL, null=True, blank=True)
 
     class Meta:

@@ -1,22 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<h2>ELEKTRO</h2>
-{% for category in categories %}
-       <ul>
-           <li><a href="">{{ category.name }}</a></li>
-           <img src="{% category.image.image.url %}">
-       </ul>
+{% for image in images %}
+  {{ image.image.url }}
 {% endfor %}
 
-<script>
-    startTimer();
-    setInterval(changeImage, 30000);
-</script>
-<div class="saleImage" id="imgContainer">
-    <img id="img" src="startpictures.webp">
-      <button class="previousButton" type="button" onclick="displayPreviousImage()"><</button>
-      <button class="nextButton" type="button" onclick="displayNextImage()">></button>
-</div>
+<h2>ELEKTRO</h2>
+<ul>
+    {% for category in categories %}
+      {% if not category.parent_category %}
+        <li><a href="">{{ category }}</a></li>
+        {% if category.subcategories.all %}
+          <ul>
+            {% for subcategory in category.subcategories.all %}
+              <li><a href="">{{ subcategory }}</a></li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </ul>
+
 {% endblock %}
