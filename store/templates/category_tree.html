@@ -1,0 +1,12 @@
+{% for category in categories %}
+  {% if not category.parent_category %}
+    <ul>
+      <li>
+        <a href="">{{ category }}</a>
+        {% with category.subcategories.all as subcategories %}
+          {% include 'category_tree.html' with categories=subcategories %}
+        {% endwith %}
+      </li>
+    </ul>
+  {% endif %}
+{% endfor %}

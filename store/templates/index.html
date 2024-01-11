@@ -1,24 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% for image in images %}
-  {{ image.image.url }}
-{% endfor %}
+  {% for image in images %}
+    {{ image.image.url }}
+  {% endfor %}
 
-<h2>ELEKTRO</h2>
-<ul>
-    {% for category in categories %}
-      {% if not category.parent_category %}
-        <li><a href="">{{ category }}</a></li>
-        {% if category.subcategories.all %}
-          <ul>
-            {% for subcategory in category.subcategories.all %}
-              <li><a href="">{{ subcategory }}</a></li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-      {% endif %}
-    {% endfor %}
-  </ul>
-
+  <h2>ELEKTRO</h2>
+  {% include 'category_tree.html' with categories=categories %}
 {% endblock %}
