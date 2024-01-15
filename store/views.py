@@ -1,7 +1,11 @@
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.forms import Form
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.views import View
-
+from django.views.generic import CreateView
 
 from store.models import *
 
@@ -61,4 +65,12 @@ class ProductDetailView(View):
         return render(request, 'product_detail.html', context)
 
 
+class YourLoginView(LoginView):
+    template_name = 'login.html'
+
+
+class RegisterView(CreateView):
+    form_class = UserCreationForm
+    template_name = "register.html"
+    success_url = reverse_lazy('login')
 

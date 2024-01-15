@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Login</h2>
+<form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Prihlásenie</button>
+</form>
+ <p>Nový zákazník? <a href="{% url 'register' %}">Registrovať sa</a></p>
+
+{% endblock %}

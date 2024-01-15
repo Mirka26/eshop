@@ -26,11 +26,6 @@
         {% endfor %}
     </ul>
 
-<form method="post" action="{% url 'add_to_cart' product.id %}">
-    {% csrf_token %}
-    <button type="submit">Přidat do košíku</button>
-</form>
-
 <p>Recenzie: {{ product.rating }}</p>
 <p>Komentáre: {{ product.comment }}</p>
 

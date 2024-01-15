@@ -1,16 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% for product in products %}
-<h1> {{ product.name }}</h1>
-    <p>Cena: {{ product.price }} €</p>
-    <p>Stav: {{ product.stock }}</p>
+
+<ul>
+    {% for product in products %}
+    <li>
+        <h1> {{ product.name }}</h1>
+        <p>Cena: {{ product.price }} €</p>
+        <p>Stav: {{ product.stock }}</p>
+
+        <h2>Obrázky:</h2>
+        <ul>
+            {% for image in product.image.all %}
+                <li>
+                    <img src="{{ image.image.url }}" alt="{{ image.description }}">
+                </li>
+            {% endfor %}
+        </ul>
 {% endfor %}
-
-<form method="post" action="{% url 'add_to_cart' product.id %}">
-    {% csrf_token %}
-    <button type="submit">Přidat do košíku</button>
-</form>
-
+</ul>
 
 {% endblock %}
