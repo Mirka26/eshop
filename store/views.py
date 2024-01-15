@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 
 
@@ -13,9 +13,10 @@ class IndexView(View):
     def get(self, request):
         images = Image.objects.all()
         categories = Category.objects.filter(parent_category=None)
+
         context = {
             "images": images,
-            "categories": categories
+            "categories": categories,
         }
         return render(request, 'index.html', context)
 
@@ -58,8 +59,6 @@ class ProductDetailView(View):
             'product': product
         }
         return render(request, 'product_detail.html', context)
-
-
 
 
 

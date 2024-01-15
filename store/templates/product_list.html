@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% for product in products %}
+<h1> {{ product.name }}</h1>
+    <p>Cena: {{ product.price }} €</p>
+    <p>Stav: {{ product.stock }}</p>
+{% endfor %}
+
+<form method="post" action="{% url 'add_to_cart' product.id %}">
+    {% csrf_token %}
+    <button type="submit">Přidat do košíku</button>
+</form>
 
 
 {% endblock %}

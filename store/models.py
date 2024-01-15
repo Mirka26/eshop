@@ -57,6 +57,7 @@ class Customer(Model):
 class Cart(Model):
     id_product = ForeignKey(Product, on_delete=DO_NOTHING)
     customer = ForeignKey(Customer, on_delete=DO_NOTHING)
+    user = ForeignKey(User, null=True, on_delete=SET_NULL)
     quantity = IntegerField()
 
 
@@ -90,7 +91,7 @@ class Comment(Model):
 
 class Image(Model):
     # url = CharField(max_length=128, null=False, blank=False)
-    image = ImageField(upload_to='images/', default=None, null=False,
+    image = ImageField(upload_to='static/images/', default=None, null=False,
                        blank=False)  # , height_field=None, width_field=None, max_length=500)
     description = TextField()
 
