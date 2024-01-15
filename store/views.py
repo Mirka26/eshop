@@ -1,41 +1,65 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+
 
 from store.models import *
 
 
 # Create your views here.
-def index(request):
-    accessories = Accessory.objects.all()
-    images = Image.objects.all()
-    categories = Category.objects.all()
-    context = {"accessories": accessories, "images": images, 'categories': categories}
-    return render(request, 'index.html', context)
+class IndexView(View):
+    template_name = "index.html"
+
+    def get(self, request):
+        images = Image.objects.all()
+        categories = Category.objects.filter(parent_category=None)
+        context = {
+            "images": images,
+            "categories": categories
+        }
+        return render(request, 'index.html', context)
 
 
-# def products(request):
-#     products_obj = Product.objects.all()
-#     context = {"products": products_obj}
-#     return render(request, "products.html", context)
+class SubcategoryDetailView(View):
+    template_name = "subcategory_detail.html"
+
+    def get(self, request, pk):
+        category = get_object_or_404(Category, id=pk)
+        subcategories = category.subcategories.all()
+        products_in_category = Product.objects.filter(categories=category)
+
+        context = {
+            "category": category,
+            "subcategories": subcategories,
+            "products_in_category": products_in_category,
+        }
+        return render(request, "subcategory_detail.html", context)
 
 
-def product_list(request):
-    product_lists = Product.objects.all()
+class ProductListView(View):
+    template_name = "product_list.html"
 
-    # Nastavenie stránkovania
-    paginator = Paginator(product_lists, 10)  # Zobrazí 10 produktov na stránku
-    page = request.GET.get('page')
+    def get(self, request, pk):
+        category = get_object_or_404(Category, id=pk)
+        products_in_category = category.products.all()
+        context = {
+            'category': category,
+            'products': products_in_category,
+        }
+        return render(request, 'product_list.html', context)
 
-    try:
-        products = paginator.page(page)
-    except PageNotAnInteger:
-        # Ak parameter 'page' nie je číslo, zobraz prvú stránku
-        products = paginator.page(1)
-    except EmptyPage:
-        # Ak stránka neexistuje, zobraz poslednú stránku
-        products = paginator.page(paginator.num_pages)
 
-    return render(request, 'product_lists.html', {'products': products})
+class ProductDetailView(View):
+    template_name = 'product_detail.html'
+
+    def get(self, request, pk):
+        product = get_object_or_404(Product, id=pk)
+        context = {
+            'product': product
+        }
+        return render(request, 'product_detail.html', context)
+
+
 
 
 

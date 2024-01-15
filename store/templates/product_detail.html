@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for product in products %}
+<h1> {{ product.name }}</h1>
+    <p>Cena: {{ product.price }} €</p>
+    <p>Stav: {{ product.stock }}</p>
+    <p>Popis: {{ product.description }}</p>
+{% endfor %}
+
+<h2>Kategórie:</h2>
+    <ul>
+        {% for category in product.categories.all %}
+            <li>{{ category.name }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Obrázky:</h2>
+    <ul>
+        {% for image in product.image.all %}
+            <li>
+              <img src="{{ image.image.url }}" alt="{{ image.description }}">
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

@@ -36,9 +36,10 @@ admin.site.register(Image)
 urlpatterns = [
     path("admin/", admin.site.urls),
 
-    path('', index, name='index'),
+    path('', IndexView.as_view(), name='index'),
 
-    path('products/', product_list, name="product_list"),
-    # path('categories/', categories, name='categories')
+    path('product-detail/<pk>/', ProductDetailView.as_view(), name='product_detail'),
+    path('subcategory/<pk>/', SubcategoryDetailView.as_view(), name='subcategory_detail'),
+    path('product-list/<pk>/', ProductListView.as_view(), name="product_list"),
 ]
 

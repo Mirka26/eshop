@@ -16,7 +16,7 @@ class Accessory(Model):
 
 
 class Product(Model):
-    name = CharField(max_length=32, null=False, blank=False)
+    name = CharField(max_length=128, null=False, blank=False)
     price = FloatField()
     categories = ManyToManyField("Category", blank=True, related_name="product_category")
     accessories = ManyToManyField(Accessory, blank=True, related_name="product_accessory")

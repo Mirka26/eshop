@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>{{ category.name }}</h2>
+
+<ul>
+    {% for subcategory in subcategories %}
+        <li>
+            <a href="{% url 'subcategory_detail' subcategory.id %}">{{ subcategory.name }}</a>
+        </li>
+    {% endfor %}
+</ul>
+
+<ul>
+    {% for product in products_in_category %}
+        <li>
+            <h1>{{ product.name }}</h1>
+            <p>Cena: {{ product.price }} €</p>
+            <p>Stav: {{ product.stock }}</p>
+            <p>Popis: {{ product.description }}</p>
+
+            <h2>Kategórie:</h2>
+            <ul>
+                {% for category in product.categories.all %}
+                    <li>{{ category.name }}</li>
+                {% endfor %}
+            </ul>
+
+            <h2>Obrázky:</h2>
+            <ul>
+                {% for image in product.image.all %}
+                    <li>
+                        <img src="{{ image.image.url }}" alt="{{ image.description }}">
+                    </li>
+                {% endfor %}
+            </ul>
+
+        </li>
+    {% endfor %}
+</ul>
+</ul>
+
+{% endblock %}
