@@ -12,12 +12,10 @@
 </head>
 <body onload = "startTimer()">
     <header class="headContainer">
-        <button class="menu">
-            <img class="img-menu" alt="Menu" src="{% static 'store/images/menu.jpg' %}">Menu
-        </button>
-        <a href="{% url 'index' %}" class="headContainer-center">
-            <h1>Vitajte na našej stránke</h1>
+        <a href="{% url 'index' %}">
+            <img class="img" alt="MainImage" src="{% static 'store/images/MainImage.jpg' %}">
         </a>
+        <h2>Ideálne elektro pre vás a váš domov</h2>
         <div class="search-container">
             <input type="text" class="search-input" id="searchInput" placeholder="Vyhľadávanie">
             <span class="search-icon" onclick="performSearch()">🔍</span>
@@ -33,14 +31,16 @@
             </a>
         </nav>
         <nav class="navContainer1">
-            <button class="cart" type="submit">
-                <img class="img-cart" alt="Cart" src="{% static 'store/images/cart.png' %}">Košík
-            </button>
+            <a href="{% url 'cart' %}">
+                <button class="cart" type="submit">
+                    <img class="img-cart" alt="Cart" src="{% static 'store/images/cart.png' %}">Košík
+                </button>
+            </a>
         </nav>
     </header>
     <main>
         {% block content %}{% endblock %}
     </main>
-    <footer>Copyright Created by Miroslava Godušová 9.1.2024</footer>
+    <footer>Copyright Created </footer>
 </body>
 </html>

@@ -2,6 +2,10 @@ from django.db import models
 from django.db.models import Model, CharField, TextField, IntegerField, ManyToManyField, FloatField, ForeignKey, \
     DO_NOTHING, SET_NULL, DateTimeField, DateField, EmailField, ImageField
 from django.contrib.auth.models import User
+from django_resized import ResizedImageField
+
+
+# from store.models import Product
 
 
 # Create your models here.
@@ -21,6 +25,7 @@ class Product(Model):
     categories = ManyToManyField("Category", blank=True, related_name="product_category")
     accessories = ManyToManyField(Accessory, blank=True, related_name="product_accessory")
     stock = IntegerField()
+    brand = CharField(max_length=16)
     image = ManyToManyField("Image", null=True, blank=True, related_name="product_image")
     description = TextField(null=True, blank=True)
 
@@ -60,6 +65,9 @@ class Cart(Model):
     user = ForeignKey(User, null=True, on_delete=SET_NULL)
     quantity = IntegerField()
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class Order(Model):
     cart = ForeignKey(Cart, on_delete=SET_NULL, null=True)
@@ -91,8 +99,7 @@ class Comment(Model):
 
 class Image(Model):
     # url = CharField(max_length=128, null=False, blank=False)
-    image = ImageField(upload_to='static/images/', default=None, null=False,
-                       blank=False)  # , height_field=None, width_field=None, max_length=500)
+    image = ResizedImageField(size=[400, 400], upload_to='static/images/', default=None, null=False, blank=False)  # , height_field=None, width_field=None, max_length=500)
     description = TextField()
 
     def __str__(self):
@@ -102,11 +109,22 @@ class Image(Model):
 class Category(Model):
     name = CharField(max_length=64)
     parent_category = ForeignKey("Category", on_delete=SET_NULL, null=True, blank=True, related_name="subcategories")
-    image = ForeignKey(Image, on_delete=SET_NULL, null=True, blank=True)
+    # image = ForeignKey(Image, on_delete=SET_NULL, null=True, blank=True)
+    image = ResizedImageField(size=[50, 50], upload_to='static/images')
 
     class Meta:
         verbose_name_plural = "Categories"
 
     def __str__(self):
         return f"{self.name}"
+
+
+class CartItem(Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 

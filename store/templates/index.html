@@ -9,7 +9,7 @@
         <li>
             <a href="{% url 'subcategory_detail' category.id %}">{{ category }}</a>
             {% if category.image %}
-              <img src="{{ category.image.image.url }}" alt="{{ category.name }} Image">
+              <img src="{{ category.image.url }}" alt="{{ category.name }} Image">
             {% endif %}
         </li>
     {% endfor %}

@@ -26,6 +26,12 @@
                     </li>
                 {% endfor %}
             </ul>
+             <form method="post" action="{% url 'add_to_cart' product.id %}">
+    {% csrf_token %}
+                 <a href="{% url 'cart' %}">
+    <button type="submit">Add to Cart</button>
+    </a>
+  </form>
             <a href="{% url 'product_detail' product.id %}">Zobrazit detail</a>
         </li>
     {% endfor %}

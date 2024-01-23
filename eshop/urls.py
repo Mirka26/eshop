@@ -30,9 +30,14 @@ urlpatterns = [
 
     path('login/', YourLoginView.as_view(), name="login"),
     path('register/', RegisterView.as_view(), name='register'),
+    path('cart/', CartView.as_view(), name='cart'),
 
     path('subcategory/<pk>/', SubcategoryDetailView.as_view(), name='subcategory_detail'),
-    path('product-list/<pk>/', ProductListView.as_view(), name="product_list"),
+    # path('product_list/<pk>/', ProductListView.as_view(), name="product_list"),
     path('product/<pk>/', ProductDetailView.as_view(), name='product_detail'),
+
+    path('product/<int:pk>/', ProductListView.as_view(), name='product_list'),
+    path('add_to_cart/<int:product_id>/', CartView.as_view(), name='add_to_cart'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
