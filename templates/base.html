@@ -16,31 +16,41 @@
             <img class="img" alt="MainImage" src="{% static 'store/images/MainImage.jpg' %}">
         </a>
         <h2>Ideálne elektro pre vás a váš domov</h2>
-        <div class="search-container">
-            <input type="text" class="search-input" id="searchInput" placeholder="Vyhľadávanie">
-            <span class="search-icon" onclick="performSearch()">🔍</span>
-        </div>
-            <a href="{% url 'index' %}">
-                <img class="img" alt="MainImage" src="{% static 'store/images/MainImage.jpg' %}">
-            </a>
-        <nav class="navContainer1">
-            <a href="{% url 'login' %}">
-                <button class="login">
+            {% if request.user.is_authenticated %}
+                Prihlásený ako: {{ request.user.username }}
+                <a href="{% url 'logout' %}">
+                    <img class="img-logout" alt="LogOut" src="{% static 'store/images/login.jpg' %}">Odhlásiť sa
+                </a>
+            {% else %}
+                <a href="{% url 'login' %}">
                     <img class="img-login" alt="LogIn" src="{% static 'store/images/login.jpg' %}">Prihlásenie
-                </button>
+                </a>
+            {% endif %}
+            {% if request.user.is_superuser %}
+            <a href="/admin/">
+                <img class="img-admin" alt="Admin" src="{% static 'store/images/images.png' %}">Admin
             </a>
-        </nav>
-        <nav class="navContainer1">
-            <a href="{% url 'cart' %}">
-                <button class="cart" type="submit">
+            {% endif %}
+                <a href="{% url 'cart' %}">
                     <img class="img-cart" alt="Cart" src="{% static 'store/images/cart.png' %}">Košík
-                </button>
-            </a>
-        </nav>
+                </a>
+
+
+            <ul class="navigation">
+                {% for category in categories %}
+                    <div>
+                        <button class="button-category-images" type="submit"><a href="{% url 'subcategory_detail' category.id %}">{{ category }}</a>
+                            {% if category.image %}
+                                <img src="{{ category.image.url }}" alt="{{ category.name }} Image"></button>
+                            {% endif %}
+                    </div>
+                {% endfor %}
+            </ul>
     </header>
     <main>
         {% block content %}{% endblock %}
     </main>
-    <footer>Copyright Created </footer>
+
+    <footer>Copyright Created by Miroslava Godušová 9.1.2024</footer>
 </body>
 </html>

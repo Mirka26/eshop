@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_extensions',
 
     'store',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -122,12 +123,15 @@ STATIC_URL = "static/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "")
 MEDIA_URL = "images/"
 
-CART_SESSION_ID = 'cart' #TODO kosik
+CART_SESSION_ID = 'cart'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGIN_REDIRECT_URL = "index"
+LOGOUT_REDIRECT_URL = "index"
 
 GRAPH_MODELS = {
     'all_applications': True,
@@ -140,6 +144,6 @@ DJANGORESIZED_DEFAULT_QUALITY = 75
 DJANGORESIZED_DEFAULT_KEEP_META = True
 DJANGORESIZED_DEFAULT_FORCE_FORMAT = 'JPEG'
 DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {'JPEG': ".jpg"}
-DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True  #TODO na formatovanie obrazkov
+DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True 
 
 

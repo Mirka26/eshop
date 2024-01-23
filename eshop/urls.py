@@ -17,8 +17,10 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.views import LoginView
 from django.urls import path, include
 
+from accounts.views import SignUpView
 from store.models import *
 from store.views import *
 
@@ -28,16 +30,22 @@ urlpatterns = [
 
     path('', IndexView.as_view(), name='index'),
 
-    path('login/', YourLoginView.as_view(), name="login"),
-    path('register/', RegisterView.as_view(), name='register'),
-    path('cart/', CartView.as_view(), name='cart'),
+    path('accounts/login/', LoginView.as_view(), name='login'),  # v djangu už to máme
+    path('accounts/register/', SignUpView.as_view(), name='register'),
+    path('accounts/', include('django.contrib.auth.urls')),  # tieto cesty sú už defaultne v djangu
 
     path('subcategory/<pk>/', SubcategoryDetailView.as_view(), name='subcategory_detail'),
-    # path('product_list/<pk>/', ProductListView.as_view(), name="product_list"),
     path('product/<pk>/', ProductDetailView.as_view(), name='product_detail'),
 
-    path('product/<int:pk>/', ProductListView.as_view(), name='product_list'),
     path('add_to_cart/<int:product_id>/', CartView.as_view(), name='add_to_cart'),
+    path('cart/', CartView.as_view(), name='cart'),
+
+    path('rate_product/', rate_product, name='rate_product'),
+    path('comment_product/', comment_product, name='comment_product'),
+
+    path('filter_by_price/<int:min_price>/<int:max_price>/', filter_by_price, name='filter_by_price'),
+    path('filter_by_rating/<str:rating_type>/', filter_by_rating, name='filter_by_rating'),
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

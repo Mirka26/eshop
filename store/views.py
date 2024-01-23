@@ -15,8 +15,6 @@ from decimal import Decimal
 from django.conf import settings
 
 
-
-
 # Create your views here.
 class IndexView(View):
     template_name = "index.html"
@@ -43,9 +41,20 @@ class SubcategoryDetailView(View):
         context = {
             "category": category,
             "subcategories": subcategories,
-            "products_in_category": products_in_category,
+            "products_in_category": products_in_category
         }
         return render(request, "subcategory_detail.html", context)
+
+    def post(self, request, *args, **kwargs):
+        product_id = self.kwargs['pk']
+        quantity = int(request.POST.get('quantity', 1))
+        update_quantity = bool(request.POST.get('update_quantity'))
+
+        cart_view = CartView()
+        cart_view.add(product_id, quantity, update_quantity)
+
+        # Redirect to cart or product detail page
+        return HttpResponseRedirect(reverse('cart') or reverse('product_list', kwargs={'pk': product_id}))
 
 
 class ProductListView(View):
@@ -77,27 +86,26 @@ class ProductDetailView(View):
 
     def get(self, request, pk):
         product = get_object_or_404(Product, id=pk)
+
+        avg_rating = None
+        if Rating.objects.filter(product=product).count() > 0:
+            avg_rating = Rating.objects.filter(product=product).aggregate(Avg("rating"))
+
+        user = request.user
+        user_rating = None
+        if request.user.is_authenticated:
+            if Rating.objects.filter(product=product, user=user).count() > 0:
+                user_rating = Rating.objects.filter(product=product, user=user)
+
+        comments = Comment.objects.filter(product=product).order_by('-created')
+
         context = {
-            'product': product
+            'product': product,
+            'avg_rating': avg_rating,
+            'user_rating': user_rating,
+            'comments': comments
         }
         return render(request, 'product_detail.html', context)
-
-    # def post(self, request, *args, **kwargs):
-    #     product_id = self.kwargs['pk']
-    #     quantity = int(request.POST.get('quantity', 1))
-    #     update_quantity = bool(request.POST.get('update_quantity'))
-    #
-    #     cart_view = CartView()
-    #     cart_view.add(product_id, quantity, update_quantity)
-    #
-    #     # Redirect to cart or product detail page
-    #     return HttpResponseRedirect(reverse('cart') or reverse('product-detail', kwargs={'pk': product_id}))
-
-
-
-
-class YourLoginView(LoginView):
-    template_name = 'login.html'
 
 
 class RegisterView(CreateView):
@@ -105,52 +113,6 @@ class RegisterView(CreateView):
     template_name = "register.html"
     success_url = reverse_lazy('login')
 
-# class CartView(CreateView):
-#     template_name = "cart.html"
-#
-#     def __init__(self, request):
-#         self.session = request.session
-#         cart = self.session.get(settings.CART_SESSION_ID)
-#         if not cart:
-#             cart = self.session[settings.CART_SESSION_ID] = {}
-#         self.cart = cart
-#
-#     def add(self, product, quantity=1, update_quantity=False):
-#         product_id = str(product.id)
-#         if product_id not in self.cart:
-#             self.cart[product_id] = {'quantity': 0, 'price': str(product.price)}
-#
-#         if update_quantity:
-#             self.cart[product_id]['quantity'] = quantity
-#         else:
-#             self.cart[product_id]['quantity'] += quantity
-#
-#         self.save()
-#
-#     def remove(self, product):
-#         product_id = str(product.id)
-#         if product_id in self.cart:
-#             del self.cart[product_id]
-#             self.save()
-#
-#     def save(self):
-#         self.session.modified = True
-#
-#     def get_cart_contents(self):
-#         product_ids = self.cart.keys()
-#         products = Product.objects.filter(id__in=product_ids)
-#
-#         cart = []
-#         for product in products:
-#             cart.append({
-#                 'product': product,
-#                 'quantity': self.cart[str(product.id)]['quantity'],
-#                 'price': self.cart[str(product.id)]['price'],
-#             })
-#         return cart
-#
-#     def get_total_price(self):
-#         return sum(Decimal(item['price']) * item['quantity'] for item in self.cart.values())
 
 class CartView(TemplateView):
     template_name = "cart.html"
@@ -164,9 +126,8 @@ class CartView(TemplateView):
         return super().dispatch(request, *args, **kwargs)
 
     def add(self, product_id, quantity=1, update_quantity=False):
-        # implementácia add metódy ako predtým...
         product = get_object_or_404(Product, id=product_id)
-        product_id = str(product.id)
+        product_id = str(product_id)
 
         if product_id not in self.cart:
             self.cart[product_id] = {'quantity': 0, 'price': str(product.price)}
@@ -176,7 +137,7 @@ class CartView(TemplateView):
         else:
             self.cart[product_id]['quantity'] += quantity
 
-        self.save()  # Opravené volanie metódy save()
+        self.save()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -196,5 +157,68 @@ class CartView(TemplateView):
     def save(self):
         self.session[settings.CART_SESSION_ID] = self.cart
         self.session.modified = True
+        
+
+def filter_by_price(request, min_price, max_price):
+    filtered_products = Product.objects.filter(price__gte=min_price, price__lte=max_price)
+
+    context = {
+        'filtered_products': filtered_products,
+        'selected_price_range': f'Od {min_price} do {max_price}',
+    }
+
+    return render(request, 'filtered_products.html', context)
+
+
+def rate_product(request):
+    user = request.user
+    if request.method == 'POST':
+        product_id = request.POST.get("product_id")
+        product_obj = Product.objects.get(id=product_id)
+        rating = request.POST.get("rating")
+
+        if Rating.objects.filter(product=product_obj, user=user).count() > 0:
+            user_rating = Rating.objects.get(product=product_obj, user=user)
+            user_rating.rating = rating
+            user_rating.save()
+        else:
+            Rating.objects.create(
+                product=product_obj,
+                user=user,
+                rating=rating
+            )
+    return redirect(f"/product/{product_id}/")
+
+
+def comment_product(request):
+    user = request.user
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        product_obj = Product.objects.get(id=product_id)
+        comment = request.POST.get('comment').strip()
+        if comment:
+            Comment.objects.create(
+                product=product_obj,
+                user=user,
+                comment=comment
+            )
+    return redirect(f"/movie/{product_id}/")
+
+
+
+def filter_by_rating(request, rating_type):
+    if rating_type == 'popular':
+        filtered_products = Product.objects.order_by('-rating')
+    elif rating_type == 'less_popular':
+        filtered_products = Product.objects.order_by('rating')
+    else:
+        filtered_products = Product.objects.all()
+
+    context = {
+        'filtered_products': filtered_products,
+        'selected_rating_type': rating_type,
+    }
+
+    return render(request, 'filtered_products.html', context)
 
 

@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block sidebar %}
+    {% include "sidebar.html" %}
+{% endblock %}
+
 {% block content %}
 
 <h2>{{ category.name }}</h2>
@@ -7,7 +11,11 @@
 <ul>
     {% for subcategory in subcategories %}
         <li>
-            <a href="{% url 'subcategory_detail' subcategory.id %}">{{ subcategory.name }}</a>
+            <button class="button-category-images" type="submit">
+                <a href="{% url 'subcategory_detail' subcategory.id %}">
+                    {{ subcategory.name }}
+                </a>
+            </button>
         </li>
     {% endfor %}
 </ul>
@@ -26,16 +34,43 @@
                     </li>
                 {% endfor %}
             </ul>
-             <form method="post" action="{% url 'add_to_cart' product.id %}">
-    {% csrf_token %}
-                 <a href="{% url 'cart' %}">
-    <button type="submit">Add to Cart</button>
-    </a>
-  </form>
+
             <a href="{% url 'product_detail' product.id %}">Zobrazit detail</a>
         </li>
+        <form method="post" action="{% url 'add_to_cart' product.id %}">
+            {% csrf_token %}
+            <a href="{% url 'cart' %}">
+                <button type="submit">Pridať do košíka</button>
+            </a>
+        </form>
     {% endfor %}
 </ul>
-</ul>
+<aside class="sidebar">
+    <h2>Filtrovať podľa ceny:</h2>
+    <ul>
+        <li>
+            <a href="{% url 'filter_by_price' '0' '100' %}">Od 0 do 100</a>
+        </li>
+        <li>
+            <a href="{% url 'filter_by_price' '100' '500' %}">Od 100 do 500</a>
+        </li>
+        <li>
+            <a href="{% url 'filter_by_price' '500' '1500' %}">Od 500 do 1500</a>
+        </li>
+        <li>
+            <a href="{% url 'filter_by_price' '1500' '5000' %}">Od 1500 do 5000</a>
+        </li>
+    </ul>
+
+    <h2>Filtrovať podľa hodnotenia:</h2>
+    <ul>
+        <li>
+            <a href="{% url 'filter_by_rating' 'popular' %}">Najobľúbenejšie</a>
+        </li>
+        <li>
+            <a href="{% url 'filter_by_rating' 'less_popular' %}">Menej obľúbené</a>
+        </li>
+    </ul>
+</aside>
 
 {% endblock %}

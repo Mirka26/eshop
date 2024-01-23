@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+    {% include "sidebar.html" %}
+{% endblock %}
+
+{% block content %}
+    <h2>Filtrovanie podľa:</h2>
+    <form method="GET" action="{% url 'filter_by_price' '0' '5000' %}">
+        <label for="min_price">Min cena:</label>
+        <input type="number" name="min_price" id="min_price" value="{{ request.GET.min_price }}">
+
+        <label for="max_price">Max cena:</label>
+        <input type="number" name="max_price" id="max_price" value="{{ request.GET.max_price }}">
+
+        <label for="rating">Hodnotenie:</label>
+        <select name="rating" id="rating">
+            <option value="popular">Najobľúbenejšie</option>
+            <option value="less_popular">Menej obľúbené</option>
+        </select>
+
+        <button type="submit">Filtrovať</button>
+    </form>
+
+    {% for product in filtered_products %}
+        {{ product.name }}
+    {% endfor %}
+{% endblock %}
