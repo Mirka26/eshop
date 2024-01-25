@@ -2,7 +2,16 @@
 
 {% block content %}
 
-  <h2>Produkt bol pridaný do košíka.</h2>
-  <p>Ďakujeme za váš nákup, produkt bol pridaný do košíka! Môžete pokračovať v prehliadaní produktov alebo prejsť do košíka.</p>
-  <a href="{% url 'cart' %}">Nákupný košík</a>
+  <ul class="product-list">
+        {% for product in products %}
+            <li class="product-item">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" width="200" height="150">
+                <h2>{{ product.name }}</h2>
+                <p>{{ product.description }}</p>
+                <p>Price: ${{ product.price }}</p>
+                <a href="#" class="buy-now-button">Kúpiť</a>
+                <a class="buy-now-button" href="{% url 'add_to_cart' product.id %}">Pridať do košíka</a>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

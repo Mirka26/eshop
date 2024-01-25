@@ -1,19 +1,80 @@
 {% extends "base.html" %}
 
+{% block title%}
+    Produkty v košíku
+{% endblock %}
+
 {% block content %}
 
-<h2>Nákupný košík</h2>
+<button onclick="goBack()">Späť</button>
+<script>
+    function goBack() {
+    window.history.back();
+    }
+</script>
+
+<style>
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+}
+
+.product-item {
+    flex: 1;
+    max-width: 30%;
+    margin: 10px;
+    border: 2px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    background-color: whitesmoke;
+    cursor: pointer;
+    font-family: Italic;
+}
+
+h1 {
+    font-family: Italic;
+}
+
+.product-item:hover {
+    transform: scale(1.05);
+}
+
+.buy-now-button {
+    display: block;
+    margin-top: 10px;
+    background-color: #004AAD;
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+</style>
+
+<h1>Nákupný košík</h1>
+
+<div class="product-list">
 {% if cart.items %}
-    <ul>
         {% for item in cart.items %}
-        <li><a href="{% url 'product_detail' item.1.product_id %}">{{ item.1.name }}
-        </a> - Quantity: {{ item.1.quantity }} - Price: ${{ item.1.price }} total_price: {{ item.1.total_price }} </li>
+        <li class="product-item">
+            <a href="{% url 'product_detail' item.1.product_id %}">{{ item.1.name }}</a>
+            <strong><p>Množstvo:</strong> {{ item.1.quantity }}</p>
+            <strong><p>Cena:</strong> {{ item.1.price }} €</p>
+            <strong><p>Celková cena:</strong> {{ item.1.total_price }} €</p>
+            <a class="buy-now-button" href="">Vymazať</a>
         {% endfor %}
-    </ul>
-    <p>Total: ${{ total_price }}</p>
-    <a href="{% url 'index' %}">Pokračovať v nákupe</a>
+        </li>
+    <li>
+        <p>Spolu: {{ total_price }} €</p>
+        <p><a href="{% url 'index' %}">Pokračovať v nákupe</a></p>
+    </li>
 {% else %}
-    <p>Tvoj košík je prázdny.</p>
+
+    Tvoj košík je prázdny.
+
 {% endif %}
+</div>
 
 {% endblock %}

@@ -190,16 +190,17 @@ def rate_product(request):
         product_obj = Product.objects.get(id=product_id)
         rating = request.POST.get("rating")
 
-        if Rating.objects.filter(product=product_obj, user=user).count() > 0:
-            user_rating = Rating.objects.get(product=product_obj, user=user)
-            user_rating.rating = rating
-            user_rating.save()
-        else:
-            Rating.objects.create(
-                product=product_obj,
-                user=user,
-                rating=rating
-            )
+        if rating:
+            if Rating.objects.filter(product=product_obj, user=user).count() > 0:
+                user_rating = Rating.objects.get(product=product_obj, user=user)
+                user_rating.rating = rating
+                user_rating.save()
+            else:
+                Rating.objects.create(
+                    product=product_obj,
+                    user=user,
+                    rating=rating
+                )
     return redirect(f"/product/{product_id}/")
 
 
@@ -234,3 +235,7 @@ def filter_by_rating(request, rating_type):
     return render(request, 'filtered_products.html', context)
 
 
+def remove_from_cart(request, item_id):
+    cart_item = Product.objects.get(id=item_id)
+    cart_item.delete()
+    return redirect('cart')

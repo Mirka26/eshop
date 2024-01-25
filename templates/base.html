@@ -3,12 +3,65 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-     <title>change picture</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'store/styles.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script type="text/javascript" src="{% static 'store/script.js' %}"></script>
+    <title>{% block title %}{% endblock %}</title>
+    <style>
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+}
+
+.product-item {
+    flex: 1;
+    max-width: 30%;
+    margin: 10px;
+    border: 2px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    background-color: whitesmoke;
+    cursor: pointer;
+}
+
+.product-images:hover {
+    transform: scale(1.1);
+    display: block;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+}
+
+.buy-now-button:hover {
+    display: block;
+    margin-top: 10px;
+    background-color: #004AAD;
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.category-text {
+    font-size: 2em;
+    text-align: center;
+}
+
+.product-description {
+    text-algin: center;
+}
+
+h2 {
+    font-family: Italic;
+    font-size: 1.7em;
+}
+</style>
 </head>
 <body onload = "startTimer()">
     <header class="headContainer">
@@ -21,7 +74,7 @@
             {% if request.user.is_authenticated %}
                 Prihlásený ako: {{ request.user.username }}
                 <a href="{% url 'logout' %}">
-                    <img class="img-logout" alt="LogOut" src="{% static 'store/images/login.jpg' %}">Odhlásiť sa
+                    <img class="img-login" alt="LogOut" src="{% static 'store/images/login.jpg' %}">Odhlásiť sa
                 </a>
             {% else %}
                 <a href="{% url 'login' %}">
@@ -37,7 +90,7 @@
             </a>
             {% endif %}
                 <a href="{% url 'cart' %}">
-                    <img class="img-cart" alt="Cart" src="{% static 'store/images/cart.png' %}">Košík
+                    Košík
                 </a>
 
             <ul class="navigation">

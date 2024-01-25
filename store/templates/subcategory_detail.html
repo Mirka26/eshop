@@ -36,17 +36,19 @@
             <ul>
                 {% if product.image.all %}
                 <li>
-                    <img src="{{ product.image.all.0.image.url }}" alt="{{ product.image.all.0.description }}">
+                    <a href="{% url 'product_detail' product.id %}">
+                        <img class="product-images" src="{{ product.image.all.0.image.url }}" alt="{{ product.image.all.0.description }}">
+                    </a>
                 </li>
             {% endif %}
             </ul>
             <p>Cena: {{ product.price }} €</p>
-            <a href="{% url 'product_detail' product.id %}">Zobrazit detail</a>
+            <a class="buy-now-button" href="{% url 'product_detail' product.id %}">Zobrazit detail</a>
         </li>
         <form method="post" action="{% url 'add_to_cart' product.id %}">
             {% csrf_token %}
             <a href="{% url 'cart' %}">
-                <button type="submit">Pridať do košíka</button>
+                <button class="buy-now-button" type="submit">Pridať do košíka</button>
             </a>
         </form>
     {% endfor %}

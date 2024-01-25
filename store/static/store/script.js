@@ -33,6 +33,23 @@ function redirectToHomePage() {
   window.location.href = "index.html"; 
 }
 
+function removeProduct(button) {
+    var productDiv = button.parentElement;
+    productDiv.remove();
+    checkEmptyCart();
+}
 
+function removeAllProducts() {
+    var cart = document.getElementById('cart');
+    cart.innerHTML = '';
+    checkEmptyCart();
+}
+
+function checkEmptyCart() {
+    var cart = document.getElementById('cart');
+    if (cart.children.length === 0) {
+        window.location.href = 'cart.html';
+    }
+}
 
 
