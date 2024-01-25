@@ -20,7 +20,7 @@ from django.contrib import admin
 from django.contrib.auth.views import LoginView
 from django.urls import path, include
 
-from accounts.views import SignUpView
+from accounts.views import SignUpView, UserProfileView, EditProfileView, CreateProfileView
 from store.models import *
 from store.views import *
 
@@ -33,6 +33,10 @@ urlpatterns = [
     path('accounts/login/', LoginView.as_view(), name='login'),  # v djangu už to máme
     path('accounts/register/', SignUpView.as_view(), name='register'),
     path('accounts/', include('django.contrib.auth.urls')),  # tieto cesty sú už defaultne v djangu
+
+    path('profile/', UserProfileView.as_view(), name='user_profile'),
+    path('edit_profile/', EditProfileView.as_view(), name='edit_profile'),
+    path('create_profile/', CreateProfileView.as_view(), name='create_profile'),
 
     path('subcategory/<pk>/', SubcategoryDetailView.as_view(), name='subcategory_detail'),
     path('product/<pk>/', ProductDetailView.as_view(), name='product_detail'),

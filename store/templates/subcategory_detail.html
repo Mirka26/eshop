@@ -8,6 +8,13 @@
 
 <h2>{{ category.name }}</h2>
 
+<button onclick="goBack()">Späť</button>
+<script>
+    function goBack() {
+    window.history.back();
+    }
+</script>
+
 <ul>
     {% for subcategory in subcategories %}
         <li>
@@ -24,17 +31,16 @@
     {% for product in products_in_category %}
         <li>
             <h1>{{ product.name }}</h1>
-            <p>Cena: {{ product.price }} €</p>
 
             <h2>Obrázky:</h2>
             <ul>
-                {% for image in product.image.all %}
-                    <li>
-                        <img src="{{ image.image.url }}" alt="{{ image.description }}">
-                    </li>
-                {% endfor %}
+                {% if product.image.all %}
+                <li>
+                    <img src="{{ product.image.all.0.image.url }}" alt="{{ product.image.all.0.description }}">
+                </li>
+            {% endif %}
             </ul>
-
+            <p>Cena: {{ product.price }} €</p>
             <a href="{% url 'product_detail' product.id %}">Zobrazit detail</a>
         </li>
         <form method="post" action="{% url 'add_to_cart' product.id %}">

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Upraviť profil</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <a href="{% url 'profile' %}"><button type="submit">Uložiť zmeny</button></a>
+    </form>
+{% endblock %}

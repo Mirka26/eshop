@@ -3,27 +3,17 @@
 {% block content %}
 
 <h2>Nákupný košík</h2>
-
 {% if cart.items %}
     <ul>
         {% for item in cart.items %}
-            <li>
-                <strong>Názov produktu:{{ item.id_product.name }}</strong>
-            </li>
-            <li>
-                <strong>Množstvo: {{ item.quantity }}</strong>
-            </li>
-            <li>
-                <strong>Cena: {{ item.price }}€</strong>
-            </li>
+        <li><a href="{% url 'product_detail' item.1.product_id %}">{{ item.1.name }}
+        </a> - Quantity: {{ item.1.quantity }} - Price: ${{ item.1.price }} total_price: {{ item.1.total_price }} </li>
         {% endfor %}
     </ul>
-    <p>Výsledná suma: {{ cart.total_price }}€</p>
+    <p>Total: ${{ total_price }}</p>
     <a href="{% url 'index' %}">Pokračovať v nákupe</a>
 {% else %}
     <p>Tvoj košík je prázdny.</p>
-    <a href="{% url 'index' %}">Pokračovať v nákupe</a>
-
 {% endif %}
 
 {% endblock %}

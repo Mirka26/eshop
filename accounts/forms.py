@@ -1,11 +1,9 @@
-from django.forms import ModelForm
+from django import forms
+from store.models import Customer
 
-from accounts.models import Profile
 
-
-class CustomerProfileForm(ModelForm):
+class ProfileForm(forms.ModelForm):
     class Meta:
-        model = Profile
-        fields = [
-            'phone_number',
-            'address', ...]
+        model = Customer
+        # fields = ["first_name", "last_name", 'address', 'mobile_number', 'gender', 'birth_date', 'avatar']
+        fields = "__all__"

@@ -15,7 +15,9 @@
         <a href="{% url 'index' %}">
             <img class="img" alt="MainImage" src="{% static 'store/images/MainImage.jpg' %}">
         </a>
-        <h2>Ideálne elektro pre vás a váš domov</h2>
+        <a href="{% url 'index' %}">
+        <h2 style="text-decoration: none;">Ideálne elektro pre vás a váš domov</h2>
+        </a>
             {% if request.user.is_authenticated %}
                 Prihlásený ako: {{ request.user.username }}
                 <a href="{% url 'logout' %}">
@@ -26,6 +28,9 @@
                     <img class="img-login" alt="LogIn" src="{% static 'store/images/login.jpg' %}">Prihlásenie
                 </a>
             {% endif %}
+            <a href="{% url 'user_profile' %}">
+                Profil
+            </a>
             {% if request.user.is_superuser %}
             <a href="/admin/">
                 <img class="img-admin" alt="Admin" src="{% static 'store/images/images.png' %}">Admin
@@ -34,7 +39,6 @@
                 <a href="{% url 'cart' %}">
                     <img class="img-cart" alt="Cart" src="{% static 'store/images/cart.png' %}">Košík
                 </a>
-
 
             <ul class="navigation">
                 {% for category in categories %}

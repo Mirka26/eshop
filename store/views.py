@@ -127,21 +127,34 @@ class CartView(TemplateView):
 
     def add(self, product_id, quantity=1, update_quantity=False):
         product = get_object_or_404(Product, id=product_id)
-        product_id = str(product_id)
-
+        product_id = str(product.id)
+        print("add_to_cart", product_id)
         if product_id not in self.cart:
-            self.cart[product_id] = {'quantity': 0, 'price': str(product.price)}
+            self.cart[product_id] = {
+                "product_id": product_id,
+                "name": product.name,
+                'quantity': 0,
+                'price': str(product.price),
+                "total_price": 0}
 
         if update_quantity:
             self.cart[product_id]['quantity'] = quantity
+            self.cart[product_id]['total_price'] = self.cart[product_id]['quantity'] * product.price
         else:
             self.cart[product_id]['quantity'] += quantity
+            self.cart[product_id]['total_price'] = self.cart[product_id]['quantity'] * product.price
 
         self.save()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['cart'] = self.cart
+        total_price = 0
+        for i in self.cart:
+            print("item: ", i)
+            print(self.cart)
+            total_price += int(self.cart[i]['total_price'])
+        context['total_price'] = total_price
         return context
 
     def post(self, request, *args, **kwargs):
@@ -203,7 +216,6 @@ def comment_product(request):
                 comment=comment
             )
     return redirect(f"/movie/{product_id}/")
-
 
 
 def filter_by_rating(request, rating_type):
