@@ -46,12 +46,22 @@ class EditProfileView(View):
     template_name = 'edit_profile.html'
 
     def get(self, request, *args, **kwargs):
-        user_profile = Customer.objects.all()
+        # user_profile = Customer.objects.all()
+        try:
+            user_profile = Customer.objects.get(email=request.user.email)
+        except Customer.DoesNotExist:
+            user_profile = None
+
         form = ProfileForm(instance=user_profile)
         return render(request, self.template_name, {'form': form, 'user_profile': user_profile})
 
     def post(self, request, *args, **kwargs, ):
-        user_profile = Customer.objects.get()
+        # user_profile = Customer.objects.get()
+        try:
+            user_profile = Customer.objects.get(email=request.user.email)
+        except Customer.DoesNotExist:
+            user_profile = None
+
         form = ProfileForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
             form.save()
@@ -62,13 +72,23 @@ class CreateProfileView(View):
     template_name = "create_profile.html"
 
     def get(self, request, *args, **kwargs):
-        print("user:", request.user)
-        user_profile = Customer.objects.create()
+        # print("user:", request.user)
+        # user_profile = Customer.objects.create()
+        try:
+            user_profile = Customer.objects.get(email=request.user.email)
+        except Customer.DoesNotExist:
+            user_profile = None
+
         form = ProfileForm(instance=user_profile)
         return render(request, self.template_name, {'form': form, 'user_profile': user_profile})
 
     def post(self, request, *args, **kwargs):
-        user_profile = Customer.objects.get()
+        # user_profile = Customer.objects.get()
+        try:
+            user_profile = Customer.objects.get(email=request.user.email)
+        except Customer.DoesNotExist:
+            user_profile = None
+
         form = ProfileForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
             form.save()

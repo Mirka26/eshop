@@ -109,7 +109,6 @@
             <input type="hidden" name="product_id" value="{{ product.id }}">
             <input class="buy-now-button" type="submit" value="Odoslať hodnotenie">
         </form>
-
     {% endif %}
     {% if request.user.is_authenticated %}
         <form method="post" action="{% url 'comment_product' %}">
@@ -139,9 +138,9 @@
                 </div>
             </div>
 
-    {% empty %}
-        Žiadny komentár.
-    {% endfor %}
+        {% empty %}
+            Žiadny komentár.
+        {% endfor %}
+
 
 {% endblock %}
-

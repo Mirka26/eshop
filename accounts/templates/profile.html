@@ -4,14 +4,15 @@
 
 <h3>Používateľský profil</h3>
 
-    <p><strong>Meno:</strong> {{ user.username }}</p>
-    <p><strong>Address:</strong> {{ profile.address }}</p>
-    <p><strong>Mobilné číslo:</strong> {{ profile.mobile_number }}</p>
-    <p><strong>Gender:</strong> {{ profile.gender }}</p>
-    <p><strong>Dátum narodenia:</strong> {{ profile.birth_date }}</p>
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Meno:</strong> {{ customer.first_name }}</p>
+    <p><strong>Priezvisko:</strong> {{ customer.last_name }}</p>
+    <p><strong>Address:</strong> {{ customer.address }}</p>
+    <p><strong>Mobilné číslo:</strong> {{ customer.mobile_number }}</p>
+    <p><strong>Dátum narodenia:</strong> {{ customer.birth_date }}</p>
 
-
-    <a href="{% url 'edit_profile' %}">Upraviť Profil</a>
+    <a href="{% url 'create_profile' %}">Vyplniť profil</a>
+    <a href="{% url 'edit_profile' %}">Upraviť profil</a>
 
 {% endblock %}
 

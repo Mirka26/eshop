@@ -18,13 +18,13 @@ class ProfileForm(forms.ModelForm):
         model = Customer
         # fields = ["first_name", "last_name", 'address', 'mobile_number', 'gender', 'birth_date', 'avatar']
         fields = "__all__"
+        exclude = ['email']
 
         labels = {
             'first_name': 'Meno',
             'last_name': 'Priezvisko',
             'birth_date': 'Datum narodenia',
             'address': 'Adresa',
-            'email': 'E-mail',
             'mobile_number': 'Mobilné číslo',
         }
 
