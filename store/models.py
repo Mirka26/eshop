@@ -70,11 +70,15 @@ class Cart(Model):
 
 
 class Order(Model):
+    user = ForeignKey(User, on_delete=models.CASCADE)
     cart = ForeignKey(Cart, on_delete=SET_NULL, null=True)
     customer = ForeignKey(Customer, on_delete=DO_NOTHING)
     order_date_time = DateTimeField()
     total_price = FloatField()
     order_status = CharField(max_length=64)
+
+    def __str__(self):
+        return f"Order #{self.id} - {self.user.username}"
 
 
 class Rating(Model):
