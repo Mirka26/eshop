@@ -110,7 +110,7 @@
     <h2 class="filter">Filtrovať podľa ceny:</h2>
     <ul>
         <li>
-            <a href="{% url 'filter_by_price' '0' '100' %}" class="normal-link" onclick="changeColor(this)">Od 0 do 100</a>
+            <a href="{% url 'filter_by_price' '0' '100' %}"?min_price={{min_price}}&max_price={{max_price}}" class="normal-link" onclick="changeColor(this)">Od 0 do 100</a>
         </li>
         <li>
             <a href="{% url 'filter_by_price' '100' '500' %}" class="normal-link" onclick="changeColor(this)">Od 100 do 500</a>

@@ -60,7 +60,7 @@ class Customer(Model):
 
 
 class Cart(Model):
-    id_product = ForeignKey(Product, on_delete=DO_NOTHING)
+    product = ForeignKey(Product, on_delete=DO_NOTHING)
     customer = ForeignKey(Customer, on_delete=DO_NOTHING)
     user = ForeignKey(User, null=True, on_delete=SET_NULL)
     quantity = IntegerField()

@@ -4,6 +4,8 @@
     Vitajte
 {% endblock %}
 
+
+
 {% block content %}
 
 {% load static %}
@@ -17,34 +19,35 @@
         <button class="previousButton" type="button" onclick="displayPreviousImage()"><</button>
         <button class="nextButton" type="button" onclick="displayNextImage()">></button>
     </div>
-
 <aside class="sidebar">
+<div class="filter-products">
+<form method="GET" action="{% url 'filter_by_price' 0 5000 %}">
+    <label for="min_price">Min cena:</label>
+    <input type="number" name="min_price" id="min_price" value="{{ request.GET.min_price }}">
 
-    <ul>
-        <h2 class="filter">Filtrovať podľa ceny:</h2>
-        <li>
-            <a href="{% url 'filter_by_price' '0' '100' %}">Od 0 do 100</a>
-        </li>
-        <li>
-            <a href="{% url 'filter_by_price' '100' '500' %}">Od 100 do 500</a>
-        </li>
-        <li>
-            <a href="{% url 'filter_by_price' '500' '1500' %}">Od 500 do 1500</a>
-        </li>
-        <li>
-            <a href="{% url 'filter_by_price' '1500' '5000' %}">Od 1500 do 5000</a>
-        </li>
-    </ul>
+    <label for="max_price">Max cena:</label>
+    <input type="number" name="max_price" id="max_price" value="{{ request.GET.max_price }}">
 
-    <ul>
-        <h2 class="filter">Filtrovať podľa hodnotenia:</h2>
-        <li>
-            <a href="{% url 'filter_by_rating' 'popular' %}">Najobľúbenejšie</a>
-        </li>
-        <li>
-            <a href="{% url 'filter_by_rating' 'less_popular' %}">Menej obľúbené</a>
-        </li>
-    </ul>
+    <button type="submit" class="buy-now-button">Filtrovať podľa ceny</button>
+</form>
+
+<form method="GET" action="{% url 'filter_by_rating' 'popular' %}">
+    <label for="rating">Hodnotenie:</label>
+    <select name="rating" id="rating">
+        <option value="popular">Najobľúbenejšie</option>
+        <option value="less_popular">Menej obľúbené</option>
+    </select>
+
+    <button type="submit" class="buy-now-button">Filtrovať podľa hodnotenia</button>
+</form>
+</div>
+
+<div class="filter-products">
+<a href="{% url 'filter_by_price' min_price='0' max_price='100' %}" class="normal-link" onclick="changeColor(this)">Od 0 do 100</a>
+<a href="{% url 'filter_by_price' min_price='100' max_price='500' %}" class="normal-link" onclick="changeColor(this)">Od 100 do 500</a>
+<a href="{% url 'filter_by_price' min_price='500' max_price='1500' %}" class="normal-link" onclick="changeColor(this)">Od 500 do 1500</a>
+<a href="{% url 'filter_by_price' min_price='1500' max_price='5000' %}" class="normal-link" onclick="changeColor(this)">Od 1500 do 5000</a>
+</div>
 </aside>
 
 {% endblock %}

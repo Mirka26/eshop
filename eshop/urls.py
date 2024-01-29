@@ -47,7 +47,10 @@ urlpatterns = [
     # path('remove/<pk>/', views.remove_from_cart, name='remove_from_cart'),
 
     path('rate_product/', rate_product, name='rate_product'),
+
     path('comment_product/', comment_product, name='comment_product'),
+    path('edit_comment/<pk>/', edit_comment, name='edit_comment'),
+    path('delete_comment/<pk>/', delete_comment, name='delete_comment'),
 
     path('filter_by_price/<int:min_price>/<int:max_price>/', filter_by_price, name='filter_by_price'),
     path('filter_by_rating/<str:rating_type>/', filter_by_rating, name='filter_by_rating'),

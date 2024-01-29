@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Vymazanie komentáru{% endblock %}
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+    <p>
+      Naozaj chcete zmazať svoj komentár? "{{ comment.comment }}" z databázy?
+    </p>
+    <input type="submit" value="Submit" class="btn btn-danger">
+  </form>
+
+{% endblock %}

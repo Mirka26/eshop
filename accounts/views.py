@@ -37,7 +37,7 @@ class UserProfileView(View):
     template_name = 'profile.html'
 
     def get(self, request, *args, **kwargs):
-        user_profile = Profile.objects.get(user=request.user)
+        user_profile = Customer.objects.all()
         return render(request, self.template_name, {'user_profile': user_profile})
 
 
@@ -46,12 +46,12 @@ class EditProfileView(View):
     template_name = 'edit_profile.html'
 
     def get(self, request, *args, **kwargs):
-        user_profile = Profile.objects.get(user=request.user)
+        user_profile = Customer.objects.all()
         form = ProfileForm(instance=user_profile)
         return render(request, self.template_name, {'form': form, 'user_profile': user_profile})
 
-    def post(self, request, *args, **kwargs):
-        user_profile = Profile.objects.get(user=request.user)
+    def post(self, request, *args, **kwargs, ):
+        user_profile = Customer.objects.get()
         form = ProfileForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
             form.save()

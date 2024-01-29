@@ -181,14 +181,14 @@ body {
     .saleImage {
         width: 60rem;
         height: 25rem;
-        margin-top: 140px;
-        margin-left: 75px;
+        margin-top: 100px;
+        margin-left: 65px;
     }
 
     .sidebar {
         width: 200px;
         height: 100px;
-        flex-wrap: wrap;
+        margin-top: 150px;
     }
 
     .filter {
@@ -229,7 +229,7 @@ body {
                 </a>
             {% endif %}
             {% if request.user.is_superuser %}
-                <a href="/admin/">
+                <a href="/admin/" class="normal-link" onclick="changeColor(this)">
                     <img class="img-admin" alt="Admin" src="{% static 'store/images/images.png' %}">Admin
                 </a>
             {% endif %}

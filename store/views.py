@@ -148,6 +148,7 @@ class CartView(TemplateView):
             self.cart[product_id]['quantity'] += quantity
             self.cart[product_id]['total_price'] = self.cart[product_id]['quantity'] * product.price
 
+            print("add_to_cart", product_id)
         self.save()
 
     def remove(self, product_id):
@@ -204,7 +205,7 @@ def rate_product(request):
                     user=user,
                     rating=rating
                 )
-    return redirect(f"/product_detail/{product_id}/")
+    return redirect(f"/product/{product_id}/")
 
 
 @login_required
@@ -220,25 +221,76 @@ def comment_product(request):
                 user=user,
                 comment=comment
             )
-    return redirect(f"/product_detail/{product_id}/")
+    return redirect(f"/product/{product_id}/")
 
+
+def edit_comment(request, pk):
+    comment = Comment.objects.get(id=pk)
+    if request.user == comment.user:
+        if request.method == 'POST':
+            comment_body = request.POST.get('comment').strip()
+            comment.comment = comment_body
+            comment.save()
+            return redirect(f"/product/{comment.product.id}/")
+
+        # else - tj. pokud ještě neposíláme data z formuláře
+        context = {'comment': comment}
+        return render(request, 'edit_comment.html', context)
+    return redirect(f"/product/{comment.product.id}/")
+
+
+def delete_comment(request, pk):
+    comment = Comment.objects.get(id=pk)
+    if request.user == comment.user:
+        if request.method == 'POST':
+            comment.delete()
+            return redirect(f"/product/{comment.product.id}/")
+
+        # else
+        context = {'comment': comment}
+        return render(request, 'comment_confirm_delete.html', context)
+    return redirect(f"/product/{comment.product.id}/")
+
+
+# def filter_by_price(request, min_price, max_price):
+#     filtered_products = Product.objects.filter(price__gte=min_price, price__lte=max_price)
+#
+#     context = {
+#         'filtered_products': filtered_products,
+#         'selected_price_range': f'Od {min_price} do {max_price}',
+#     }
+#
+#     return render(request, 'filtered_products.html', context)
 
 def filter_by_price(request, min_price, max_price):
-    filtered_products = Product.objects.filter(price__gte=min_price, price__lte=max_price)
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
 
-    context = {
-        'filtered_products': filtered_products,
-        'selected_price_range': f'Od {min_price} do {max_price}',
-    }
+    # Kontrola, zda jsou min_price a max_price platné hodnoty
+    if min_price is not None and max_price is not None and min_price != '' and max_price != '':
+        # Převedení na čísla
+        min_price = float(min_price)
+        max_price = float(max_price)
 
-    return render(request, 'filtered_products.html', context)
+        # Filtrování produktů podle cenového rozsahu
+        filtered_products = Product.objects.filter(price__gte=min_price, price__lte=max_price)
+
+        context = {
+            'filtered_products': filtered_products,
+            'selected_price_range': f'Od {min_price} do {max_price}',
+        }
+
+        return render(request, 'filtered_products.html', context)
+    else:
+        # V případě neplatných hodnot můžete provést vhodné akce, například zobrazit všechny produkty.
+        return render(request, 'filtered_products.html', {'filtered_products': Product.objects.all()})
 
 
 def filter_by_rating(request, rating_type):
     if rating_type == 'popular':
-        filtered_products = Product.objects.order_by('-rating')
-    elif rating_type == 'less_popular':
         filtered_products = Product.objects.order_by('rating')
+    elif rating_type == 'less_popular':
+        filtered_products = Product.objects.order_by('-rating')
     else:
         filtered_products = Product.objects.all()
 
