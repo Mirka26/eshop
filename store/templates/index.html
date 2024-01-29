@@ -1,20 +1,27 @@
 {% extends "base.html" %}
 
+{% block title %}
+    Vitajte
+{% endblock %}
+
 {% block content %}
 
+{% load static %}
+
 <script>
-      startTimer(); // Zavolání funkce startTimer při načítání stránky
-      setInterval(changeImage, 30000); // Nastavení intervalu pro změnu obrázků
-    </script>
+      startTimer();
+      setInterval(changeImage, 30000);
+</script>
     <div class="saleImage" id="imgContainer">
-      <img id="img" src="startpictures.webp">
-      <button class="previousButton" type="button" onclick="displayPreviousImage()"><</button>
-      <button class="nextButton" type="button" onclick="displayNextImage()">></button>
+        <img class="saleImage" id="img" src="{% static 'store/images/startpictures.webp' %}">
+        <button class="previousButton" type="button" onclick="displayPreviousImage()"><</button>
+        <button class="nextButton" type="button" onclick="displayNextImage()">></button>
     </div>
 
 <aside class="sidebar">
-    <h2>Filtrovať podľa ceny:</h2>
+
     <ul>
+        <h2 class="filter">Filtrovať podľa ceny:</h2>
         <li>
             <a href="{% url 'filter_by_price' '0' '100' %}">Od 0 do 100</a>
         </li>
@@ -29,8 +36,8 @@
         </li>
     </ul>
 
-    <h2>Filtrovať podľa hodnotenia:</h2>
     <ul>
+        <h2 class="filter">Filtrovať podľa hodnotenia:</h2>
         <li>
             <a href="{% url 'filter_by_rating' 'popular' %}">Najobľúbenejšie</a>
         </li>

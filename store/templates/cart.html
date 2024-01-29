@@ -14,67 +14,48 @@
 </script>
 
 <style>
-.product-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    list-style: none;
-    padding: 0;
-}
-
-.product-item {
-    flex: 1;
-    max-width: 30%;
-    margin: 10px;
-    border: 2px solid #ccc;
-    padding: 10px;
-    text-align: center;
-    background-color: whitesmoke;
-    cursor: pointer;
-    font-family: Italic;
-}
-
-h1 {
-    font-family: Italic;
-}
-
-.product-item:hover {
-    transform: scale(1.05);
-}
-
-.buy-now-button {
-    display: block;
-    margin-top: 10px;
-    background-color: #004AAD;
-    color: white;
-    text-decoration: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-}
+    .product-item:hover {
+        transform: scale(1.15);
+    }
 </style>
 
-<h1>Nákupný košík</h1>
+<h2>Nákupný košík</h2>
 
 <div class="product-list">
 {% if cart.items %}
         {% for item in cart.items %}
         <li class="product-item">
-            <a href="{% url 'product_detail' item.1.product_id %}">{{ item.1.name }}</a>
-            <strong><p>Množstvo:</strong> {{ item.1.quantity }}</p>
-            <strong><p>Cena:</strong> {{ item.1.price }} €</p>
-            <strong><p>Celková cena:</strong> {{ item.1.total_price }} €</p>
-            <a class="buy-now-button" href="">Vymazať</a>
-        {% endfor %}
+            <a href="{% url 'product_detail' item.1.product_id %}" class="normal-link" onclick="changeColor(this)"><h4>{{ item.1.name }}</h4></a>
+            <p>
+                <strong>Množstvo:</strong> {{ item.1.quantity }}
+            </p>
+            <p>
+                <strong>Cena:</strong> {{ item.1.price }} €
+            </p>
+            <p>
+                <strong>Celková cena:</strong> {{ item.1.total_price }} €
+            </p>
+            <form method="post" action="{% url 'cart' %}">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ item.1.product_id }}">
+                <input type="submit" value="Vymazať">
+            </form>
         </li>
-    <li>
-        <p>Spolu: {{ total_price }} €</p>
-        <p><a href="{% url 'index' %}">Pokračovať v nákupe</a></p>
-    </li>
+        {% endfor %}
+
+
 {% else %}
-
     Tvoj košík je prázdny.
-
 {% endif %}
 </div>
+    <div>
+        <p><strong>Spolu:</strong> {{ total_price }} €</p>
+        <p class="continue-shopping">
+            <a href="{% url 'index' %}" class="normal-link" onclick="changeColor(this)">
+                <strong>< Pokračovať v nákupe</strong>
+            </a>
+        </p>
+
+    </div>
 
 {% endblock %}
