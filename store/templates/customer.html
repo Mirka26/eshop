@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form method="post" action="{% url 'customer' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Vytvoriť profil</button>
+</form>
+
+{% endblock %}

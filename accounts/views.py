@@ -73,21 +73,13 @@ class CreateProfileView(View):
 
     def get(self, request, *args, **kwargs):
         # print("user:", request.user)
-        # user_profile = Customer.objects.create()
-        try:
-            user_profile = Customer.objects.get(email=request.user.email)
-        except Customer.DoesNotExist:
-            user_profile = None
-
+        user_profile = Customer.objects.create(user=request.user)
         form = ProfileForm(instance=user_profile)
         return render(request, self.template_name, {'form': form, 'user_profile': user_profile})
 
     def post(self, request, *args, **kwargs):
         # user_profile = Customer.objects.get()
-        try:
-            user_profile = Customer.objects.get(email=request.user.email)
-        except Customer.DoesNotExist:
-            user_profile = None
+        user_profile = Customer.objects.get_or_create(user=request.user)
 
         form = ProfileForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():

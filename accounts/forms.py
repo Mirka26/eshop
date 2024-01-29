@@ -24,7 +24,7 @@ class ProfileForm(forms.ModelForm):
             'first_name': 'Meno',
             'last_name': 'Priezvisko',
             'birth_date': 'Datum narodenia',
-            'address': 'Adresa',
+            # 'address': 'Adresa',
             'mobile_number': 'Mobilné číslo',
         }
 

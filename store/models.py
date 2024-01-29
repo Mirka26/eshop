@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import Model, CharField, TextField, IntegerField, ManyToManyField, FloatField, ForeignKey, \
-    DO_NOTHING, SET_NULL, DateTimeField, DateField, EmailField, ImageField
+    DO_NOTHING, SET_NULL, DateTimeField, DateField, EmailField, ImageField, OneToOneField
 from django.contrib.auth.models import User
 from django_resized import ResizedImageField
 
@@ -43,10 +43,11 @@ class Parameter(Model):
 
 
 class Customer(Model):
+    user = OneToOneField(User, on_delete=models.CASCADE, default=None, null=True)
     first_name = CharField(max_length=32, null=False, blank=False)
     last_name = CharField(max_length=32, null=False, blank=False)
     birth_date = DateField(null=True, blank=True)
-    address = TextField()
+    # address = TextField(null=True, blank=True)
     email = EmailField(null=False, blank=False)
     mobile_number = CharField(max_length=16)
     created = DateTimeField(auto_now_add=True)
@@ -124,7 +125,7 @@ class Category(Model):
 
 
 class CartItem(Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=DO_NOTHING)
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):

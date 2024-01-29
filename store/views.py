@@ -130,6 +130,7 @@ class CartView(TemplateView):
         return super().dispatch(request, *args, **kwargs)
 
     def add(self, product_id, quantity=1, update_quantity=False):
+        print("ahoj")
         product = get_object_or_404(Product, id=product_id)
         product_id = str(product.id)
         print("add_to_cart", product_id)
@@ -151,11 +152,11 @@ class CartView(TemplateView):
             print("add_to_cart", product_id)
         self.save()
 
-    def remove(self, product_id):
-        product_id = str(product_id)
-        if product_id in self.cart:
-            del self.cart[product_id]
-            self.save()
+    # def remove(self, product_id):
+    #     product_id = str(product_id)
+    #     if product_id in self.cart:
+    #         del self.cart[product_id]
+    #         self.save()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -175,8 +176,8 @@ class CartView(TemplateView):
 
         if update_quantity:
             self.add(product_id, quantity, update_quantity)
-        else:
-            self.remove(product_id)
+        # else:
+        #     self.remove(product_id)
 
         # Redirect to the cart page
         return HttpResponseRedirect(reverse('cart'))
@@ -184,6 +185,38 @@ class CartView(TemplateView):
     def save(self):
         self.session[settings.CART_SESSION_ID] = self.cart
         self.session.modified = True
+
+
+def remove_from_cart(request, product_id):
+    cart_item = Product.objects.get(id=product_id)
+    cart_item.delete()
+    return redirect('cart')
+
+
+def add_to_cart(request, product_id, quantity=1, update_quantity=False):
+    print("ahoj")
+    customer = Customer.objects.get_or_create(user=request.user)
+    cart = Cart.objects.get_or_create(customer=customer)
+    product = get_object_or_404(Product, id=product_id)
+    product_id = str(product.id)
+    print("add_to_cart", product_id)
+    if product_id not in cart:
+        cart[product_id] = {
+            "product_id": product_id,
+            "name": product.name,
+            'quantity': 0,
+            'price': str(product.price),
+            "total_price": 0}
+
+    if update_quantity:
+        cart[product_id]['quantity'] = quantity
+        cart[product_id]['total_price'] = cart[product_id]['quantity'] * product.price
+    else:
+        cart[product_id]['quantity'] += quantity
+        cart[product_id]['total_price'] = cart[product_id]['quantity'] * product.price
+
+        print("add_to_cart", product_id)
+    cart.save()
 
 
 @login_required
@@ -252,27 +285,14 @@ def delete_comment(request, pk):
     return redirect(f"/product/{comment.product.id}/")
 
 
-# def filter_by_price(request, min_price, max_price):
-#     filtered_products = Product.objects.filter(price__gte=min_price, price__lte=max_price)
-#
-#     context = {
-#         'filtered_products': filtered_products,
-#         'selected_price_range': f'Od {min_price} do {max_price}',
-#     }
-#
-#     return render(request, 'filtered_products.html', context)
-
 def filter_by_price(request, min_price, max_price):
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
 
-    # Kontrola, zda jsou min_price a max_price platné hodnoty
     if min_price is not None and max_price is not None and min_price != '' and max_price != '':
-        # Převedení na čísla
         min_price = float(min_price)
         max_price = float(max_price)
 
-        # Filtrování produktů podle cenového rozsahu
         filtered_products = Product.objects.filter(price__gte=min_price, price__lte=max_price)
 
         context = {
@@ -282,7 +302,6 @@ def filter_by_price(request, min_price, max_price):
 
         return render(request, 'filtered_products.html', context)
     else:
-        # V případě neplatných hodnot můžete provést vhodné akce, například zobrazit všechny produkty.
         return render(request, 'filtered_products.html', {'filtered_products': Product.objects.all()})
 
 
@@ -300,9 +319,3 @@ def filter_by_rating(request, rating_type):
     }
 
     return render(request, 'filtered_products.html', context)
-
-
-# def remove_from_cart(request, item_id):
-#     cart_item = Product.objects.get(id=item_id)
-#     cart_item.delete()
-#     return redirect('cart')
