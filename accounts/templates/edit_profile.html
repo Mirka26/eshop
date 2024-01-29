@@ -1,10 +1,24 @@
-{% extends 'base.html' %}
+<style>
+    .avatar-image {
+        width: 130px;
+        height: 130px;
+    }
+</style>
 
-{% block content %}
-    <h2>Upraviť profil</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <a href="{% url 'profile' %}"><button type="submit">Uložiť zmeny</button></a>
-    </form>
+
+<h2>Používateľský profil</h2>
+    <p>
+        <img class="avatar-image" alt="AvatarImage" src="{% static 'store/images/default_avatar.webp' %}">
+            {{ customer.avatar }}
+    </p>
+    <p><strong>Meno:</strong> {{ customer.first_name }}</p>
+    <p><strong>Priezvisko:</strong> {{ customer.last_name }}</p>
+    <p><strong>Adresa:</strong> {{ customer.address }}</p>
+    <p><strong>Mobilné číslo:</strong> {{ customer.mobile_number }}</p>
+    <p><strong>Dátum narodenia:</strong> {{ customer.birth_date }}</p>
+
+
+
+    <a href="{% url 'create_profile' %}">Vytvoriť Profile</a>
+
 {% endblock %}

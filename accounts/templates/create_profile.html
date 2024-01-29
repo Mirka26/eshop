@@ -5,7 +5,8 @@
 <form method="post" action="{% url 'create_profile' %}">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Vytvořit profil</button>
+    <button type="submit">Vytvoriť profil</button>
+    <a href="{% url 'user_profile' %}">Profil</a>
 </form>
 
 {% endblock %}
