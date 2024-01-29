@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -8,11 +9,13 @@ from django.views import View
 from django.views.generic import CreateView, TemplateView
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.db.models import Avg
 
 from store.models import *
 
 from decimal import Decimal
 from django.conf import settings
+from django.contrib import messages
 
 
 # Create your views here.
@@ -37,6 +40,7 @@ class SubcategoryDetailView(View):
         category = get_object_or_404(Category, id=pk)
         subcategories = category.subcategories.all()
         products_in_category = Product.objects.filter(categories=category)
+        paginate_by = 4
 
         context = {
             "category": category,
@@ -57,29 +61,29 @@ class SubcategoryDetailView(View):
         return HttpResponseRedirect(reverse('cart') or reverse('product_list', kwargs={'pk': product_id}))
 
 
-class ProductListView(View):
-    template_name = "product_list.html"
-
-    def get(self, request, pk):
-        category = get_object_or_404(Category, id=pk)
-        products_in_category = category.products.all()
-        context = {
-            'category': category,
-            'products': products_in_category,
-        }
-        return render(request, 'product_list.html', context)
-
-    def post(self, request, *args, **kwargs):
-        product_id = self.kwargs['pk']
-        quantity = int(request.POST.get('quantity', 1))
-        update_quantity = bool(request.POST.get('update_quantity'))
-
-        cart_view = CartView()
-        cart_view.add(product_id, quantity, update_quantity)
-
-        # Redirect to cart or product detail page
-        return HttpResponseRedirect(reverse('cart') or reverse('product_list', kwargs={'pk': product_id}))
-
+# class ProductListView(View):
+#     template_name = "product_list.html"
+#
+#     def get(self, request, pk):
+#         category = get_object_or_404(Category, id=pk)
+#         products_in_category = category.products.all()
+#         context = {
+#             'category': category,
+#             'products': products_in_category,
+#         }
+#         return render(request, 'product_list.html', context)
+#
+#     def post(self, request, *args, **kwargs):
+#         product_id = self.kwargs['pk']
+#         quantity = int(request.POST.get('quantity', 1))
+#         update_quantity = bool(request.POST.get('update_quantity'))
+#
+#         cart_view = CartView()
+#         cart_view.add(product_id, quantity, update_quantity)
+#
+#         # Redirect to cart or product detail page
+#         return HttpResponseRedirect(reverse('cart') or reverse('product_list', kwargs={'pk': product_id}))
+#
 
 class ProductDetailView(View):
     template_name = 'product_detail.html'
@@ -95,7 +99,7 @@ class ProductDetailView(View):
         user_rating = None
         if request.user.is_authenticated:
             if Rating.objects.filter(product=product, user=user).count() > 0:
-                user_rating = Rating.objects.filter(product=product, user=user)
+                user_rating = Rating.objects.get(product=product, user=user)
 
         comments = Comment.objects.filter(product=product).order_by('-created')
 
@@ -146,6 +150,12 @@ class CartView(TemplateView):
 
         self.save()
 
+    def remove(self, product_id):
+        product_id = str(product_id)
+        if product_id in self.cart:
+            del self.cart[product_id]
+            self.save()
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['cart'] = self.cart
@@ -158,11 +168,14 @@ class CartView(TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        product_id = self.kwargs['product_id']
+        product_id = request.POST.get('product_id')
         quantity = int(request.POST.get('quantity', 1))
         update_quantity = bool(request.POST.get('update_quantity'))
 
-        self.add(product_id, quantity, update_quantity)
+        if update_quantity:
+            self.add(product_id, quantity, update_quantity)
+        else:
+            self.remove(product_id)
 
         # Redirect to the cart page
         return HttpResponseRedirect(reverse('cart'))
@@ -170,19 +183,9 @@ class CartView(TemplateView):
     def save(self):
         self.session[settings.CART_SESSION_ID] = self.cart
         self.session.modified = True
-        
-
-def filter_by_price(request, min_price, max_price):
-    filtered_products = Product.objects.filter(price__gte=min_price, price__lte=max_price)
-
-    context = {
-        'filtered_products': filtered_products,
-        'selected_price_range': f'Od {min_price} do {max_price}',
-    }
-
-    return render(request, 'filtered_products.html', context)
 
 
+@login_required
 def rate_product(request):
     user = request.user
     if request.method == 'POST':
@@ -201,9 +204,10 @@ def rate_product(request):
                     user=user,
                     rating=rating
                 )
-    return redirect(f"/product/{product_id}/")
+    return redirect(f"/product_detail/{product_id}/")
 
 
+@login_required
 def comment_product(request):
     user = request.user
     if request.method == 'POST':
@@ -216,7 +220,18 @@ def comment_product(request):
                 user=user,
                 comment=comment
             )
-    return redirect(f"/movie/{product_id}/")
+    return redirect(f"/product_detail/{product_id}/")
+
+
+def filter_by_price(request, min_price, max_price):
+    filtered_products = Product.objects.filter(price__gte=min_price, price__lte=max_price)
+
+    context = {
+        'filtered_products': filtered_products,
+        'selected_price_range': f'Od {min_price} do {max_price}',
+    }
+
+    return render(request, 'filtered_products.html', context)
 
 
 def filter_by_rating(request, rating_type):
@@ -235,7 +250,7 @@ def filter_by_rating(request, rating_type):
     return render(request, 'filtered_products.html', context)
 
 
-def remove_from_cart(request, item_id):
-    cart_item = Product.objects.get(id=item_id)
-    cart_item.delete()
-    return redirect('cart')
+# def remove_from_cart(request, item_id):
+#     cart_item = Product.objects.get(id=item_id)
+#     cart_item.delete()
+#     return redirect('cart')

@@ -26,7 +26,6 @@ from store.views import *
 from store import views
 
 
-
 urlpatterns = [
     path("admin/", admin.site.urls),
 
@@ -45,7 +44,7 @@ urlpatterns = [
 
     path('add_to_cart/<int:product_id>/', CartView.as_view(), name='add_to_cart'),
     path('cart/', CartView.as_view(), name='cart'),
-    path('remove/<pk>/', views.remove_from_cart, name='remove_from_cart'),
+    # path('remove/<pk>/', views.remove_from_cart, name='remove_from_cart'),
 
     path('rate_product/', rate_product, name='rate_product'),
     path('comment_product/', comment_product, name='comment_product'),

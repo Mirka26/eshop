@@ -8,59 +8,203 @@
     <link rel="stylesheet" href="{% static 'store/styles.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script type="text/javascript" src="{% static 'store/script.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'store/script.js' %}">
+        function changeColor(link) {
+            link.classList.add('clicked-link');
+        }
+    </script>
     <title>{% block title %}{% endblock %}</title>
+
     <style>
-.product-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    list-style: none;
-    padding: 0;
-}
+body {
+        background: gainsboro;
+        font-family: Arial, sans-serif;
+        flex-wrap: wrap;
+    }
 
-.product-item {
-    flex: 1;
-    max-width: 30%;
-    margin: 10px;
-    border: 2px solid #ccc;
-    padding: 10px;
-    text-align: center;
-    background-color: whitesmoke;
-    cursor: pointer;
-}
+    .product-list {
+        text-align: center;
+        background: gainsboro;
+        margin-bottom: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        list-style: none;
+        padding: 0;
+    }
 
-.product-images:hover {
-    transform: scale(1.1);
-    display: block;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    list-style: none;
-    padding: 0;
-}
+    .product-item {
+        flex: 1;
+        max-width: 30%;
+        margin: 10px;
+        border: 2px solid #ccc;
+        padding: 10px;
+        text-align: center;
+        background-color: whitesmoke;
+        cursor: pointer;
+    }
 
-.buy-now-button:hover {
-    display: block;
-    margin-top: 10px;
-    background-color: #004AAD;
-    color: white;
-    text-decoration: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-}
+    .product-item:hover {
+        transform: scale(1.15);
+    }
 
-.category-text {
-    font-size: 2em;
-    text-align: center;
-}
+    .product-images {
+        display: flex;
+        overflow: hidden;
+    }
 
-.product-description {
-    text-algin: center;
-}
+    .product-images img {
+        flex: 1;
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        margin-right: 10px;
+    }
 
-h2 {
-    font-family: Italic;
-    font-size: 1.7em;
-}
+    .product-images img:hover {
+        transform: scale(1.3);
+    }
+
+    .product-images img:last-child {
+        margin-right: 0;
+    }
+
+    .product-list-button {
+        text-align: center;
+        justify-content: center;
+        transition: transform 0.3s ease;
+    }
+
+    .product-list-button:hover {
+        transform: scale(1.3);
+    }
+
+    .product-description {
+        text-algin: center;
+    }
+
+    .button-category-images {
+        width: 201px;
+        height: 45px;
+        background: white;
+        transition: background-color 0.3s;
+        border-radius: 70px 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .img-category {
+        width: 50px;
+        height: 30px;
+        flex-direction: row;
+    }
+
+    .buy-now-button {
+        display: block;
+        margin-top: 10px;
+        background-color: #004AAD;
+        color: white;
+        text-decoration: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    .category-text {
+        font-size: 2em;
+        text-align: center;
+    }
+
+    h1 {
+        color: white;
+        font-family: Italic;
+    }
+
+    h2 {
+        color: black;
+        font-family: Italic;
+    }
+
+    h3 {
+        font-size: 2em;
+        color: #004AAD;
+        font-family: Italic;
+    }
+
+    h4 {
+        color: #004AAD;
+        font-family: Italic;
+    }
+
+    .normal-link {
+        color: black;
+        text-decoration: none;
+    }
+
+    .clicked-link {
+        color: black;
+         text-decoration: none;
+    }
+
+    .img-login {
+        width: 20px;
+        height: 20px;
+    }
+
+    .img-logout {
+        width: 20px;
+        height: 20px;
+    }
+
+    .img-cart {
+        width: 20px;
+        height: 20px;
+    }
+
+    .img-profile {
+        width: 20px;
+        height: 20px;;
+    }
+
+    .img-admin {
+        width: 20px;
+        height: 20px;
+    }
+    .avatar-image {
+        width: 130px;
+        height: 130px;
+    }
+
+    .saleImage {
+        width: 60rem;
+        height: 25rem;
+        margin-top: 140px;
+        margin-left: 75px;
+    }
+
+    .sidebar {
+        width: 200px;
+        height: 100px;
+        flex-wrap: wrap;
+    }
+
+    .filter {
+        width: 200px;
+        height: 100px;
+        font-family: Italic;
+        text-align: center;
+        margin-top: 6.5em;
+        flex-wrap: wrap;
+    }
+
+    footer {
+        font-family: Italic;
+        text-align: center;
+        margin-top: 200px;
+    }
 </style>
 </head>
 <body onload = "startTimer()">
@@ -68,38 +212,41 @@ h2 {
         <a href="{% url 'index' %}">
             <img class="img" alt="MainImage" src="{% static 'store/images/MainImage.jpg' %}">
         </a>
-        <a href="{% url 'index' %}">
-        <h2 style="text-decoration: none;">Ideálne elektro pre vás a váš domov</h2>
+        <a href="{% url 'index' %}" class="normal-link" onclick="changeColor(this)">
+        <h1>Ideálne elektro pre vás a váš domov</h1>
         </a>
             {% if request.user.is_authenticated %}
                 Prihlásený ako: {{ request.user.username }}
-                <a href="{% url 'logout' %}">
+                <a href="{% url 'logout' %}" class="normal-link" onclick="changeColor(this)">
                     <img class="img-login" alt="LogOut" src="{% static 'store/images/login.jpg' %}">Odhlásiť sa
                 </a>
+                <a href="{% url 'user_profile' %}" class="normal-link" onclick="changeColor(this)">
+                    <img class="img-profile" alt="Profile" src="{% static 'store/images/default_image.jpg' %}">Profil
+                </a>
             {% else %}
-                <a href="{% url 'login' %}">
+                <a href="{% url 'login' %}" class="normal-link" onclick="changeColor(this)">
                     <img class="img-login" alt="LogIn" src="{% static 'store/images/login.jpg' %}">Prihlásenie
                 </a>
             {% endif %}
-            <a href="{% url 'user_profile' %}">
-                Profil
-            </a>
             {% if request.user.is_superuser %}
-            <a href="/admin/">
-                <img class="img-admin" alt="Admin" src="{% static 'store/images/images.png' %}">Admin
-            </a>
-            {% endif %}
-                <a href="{% url 'cart' %}">
-                    Košík
+                <a href="/admin/">
+                    <img class="img-admin" alt="Admin" src="{% static 'store/images/images.png' %}">Admin
                 </a>
-
-            <ul class="navigation">
+            {% endif %}
+                <a href="{% url 'cart' %}" class="normal-link" onclick="changeColor(this)">
+                    <img class="img-cart" alt="Cart" src="{% static 'store/images/cart.png' %}">Košík
+                </a>
+            <ul class="product-list">
                 {% for category in categories %}
-                    <div>
-                        <button class="button-category-images" type="submit"><a href="{% url 'subcategory_detail' category.id %}">{{ category }}</a>
-                            {% if category.image %}
-                                <img src="{{ category.image.url }}" alt="{{ category.name }} Image"></button>
-                            {% endif %}
+                    <div class="product-list-button">
+                        {% if category.image %}
+                            <button class="button-category-images" type="submit">
+                                <a href="{% url 'subcategory_detail' category.id %}" class="normal-link" onclick="changeColor(this)">
+                                    <img class="img-category" src="{{ category.image.url }}" alt="{{ category.name }} Image">
+                                    {{ category }}
+                                </a>
+                            </button>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </ul>
